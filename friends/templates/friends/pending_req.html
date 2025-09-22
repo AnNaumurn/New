@@ -1,0 +1,171 @@
+{% include "dashboard/header.html" %}
+
+{% block extra_css %}
+<style>
+/* keep your existing styles here … */
+
+/* pending requests list */
+.pending-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+.pending {
+  background: #fff7e6;
+  margin: .5rem 0;
+  padding: .7rem 1rem;
+  border-radius: 12px;
+  box-shadow: inset 2px 2px 5px #e0c89f, inset -2px -2px 5px #ffffff;
+  color: #333;
+  font-weight: 500;
+}
+.pending strong {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.pending form {
+  display: inline-block;
+  margin-right: 6px;
+}
+.pending button {
+  padding: 0.35rem 0.7rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.pending .approve {
+  background: #4caf50;
+  color: #fff;
+}
+.pending .reject {
+  background: #f44336;
+  color: #fff;
+}
+
+/* pending requests grid */
+.pending-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(1, 1fr); /* 1 per row by default */
+}
+@media (min-width: 700px) {
+  .pending-grid { grid-template-columns: repeat(2, 1fr); } /* 2 per row */
+}
+@media (min-width: 1100px) {
+  .pending-grid { grid-template-columns: repeat(3, 1fr); } /* 3 per row */
+}
+
+.pending-card {
+  background: #fff7e6;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: inset 2px 2px 5px #e0c89f, inset -2px -2px 5px #ffffff;
+  color: #333;
+  font-weight: 500;
+}
+
+.pending-card strong {
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.pending-card form {
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.pending-card button {
+  padding: 0.35rem 0.7rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.pending-card .approve {
+  background: #4caf50;
+  color: #fff;
+}
+.pending-card .reject {
+  background: #f44336;
+  color: #fff;
+}
+/* pending requests grid */
+.pending-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(1, 1fr); /* 1 card per row by default */
+}
+@media (min-width: 700px) {
+  .pending-grid { grid-template-columns: repeat(2, 1fr); } /* 2 per row on tablets */
+}
+@media (min-width: 1100px) {
+  .pending-grid { grid-template-columns: repeat(3, 1fr); } /* 3 per row on desktops */
+}
+
+.pending-card {
+  background: #fff7e6;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: inset 2px 2px 5px #e0c89f, inset -2px -2px 5px #ffffff;
+  color: #333;
+  font-weight: 500;
+  text-align: center;
+}
+
+.pending-card strong {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 1rem;
+}
+
+.pending-card form {
+  margin: 0.3rem;
+  display: inline-block;
+}
+
+.pending-card button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.pending-card .approve {
+  background: #4caf50;
+  color: #fff;
+}
+.pending-card .reject {
+  background: #f44336;
+  color: #fff;
+}
+
+</style>
+{% endblock %}
+
+<div class="friendlist">
+  <h2>⏳ Pending Requests</h2>
+  <div class="pending-grid">
+    {% for req in pending_requests %}
+      <div class="pending-card">
+        <!-- Show sender's name + email -->
+        <strong>{{ req.sender_id.name }} <br> ({{ req.sender_id.email }})</strong>
+        <form method="post" action="{% url 'respond_friend_request' req.id %}">
+          {% csrf_token %}
+          <button type="submit" name="action" value="accept" class="approve">✅ Approve</button>
+        </form>
+        <form method="post" action="{% url 'respond_friend_request' req.id %}">
+          {% csrf_token %}
+          <button type="submit" name="action" value="reject" class="reject">❌ Reject</button>
+        </form>
+      </div>
+    {% empty %}
+      <div class="pending-card">No pending requests.</div>
+    {% endfor %}
+  </div>
+</div>
+
+
+
+
+{% include "dashboard/footer.html" %}

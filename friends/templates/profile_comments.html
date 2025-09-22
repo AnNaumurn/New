@@ -1,0 +1,17 @@
+<h2>{{ profile_user.fname }} {{ profile_user.lname }}'s Profile</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <textarea name="text" rows="3" placeholder="Write a comment..."></textarea><br>
+    <button type="submit">Post</button>
+</form>
+
+<hr>
+
+<h3>Comments</h3>
+<ul>
+    {% for c in comments %}
+  <p><b>{{ c.author.fname }} {{ c.author.lname }}</b>: {{ c.text }}</p>
+  <small>on {{ c.created_at|date:"Y-m-d H:i" }}</small>
+{% endfor %}
+</ul>
